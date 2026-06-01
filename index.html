@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PostCraft Pro — Visual Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,600;10..48,700;10..48,800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark">✦</div>
+      <span class="brand-name">PostCraft</span>
+      <span class="brand-tag">Pro</span>
+    </div>
+    <div class="topbar-center">
+      <span class="zone-badge" id="zone-badge"></span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-ghost" id="btn-undo" title="Undo (Ctrl+Z)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+        Undo
+      </button>
+      <button class="btn-ghost" id="btn-clear">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        Clear
+      </button>
+      <button class="btn-primary" id="btn-export-top">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+    </div>
+  </header>
+
+  <!-- APP LAYOUT -->
+  <main class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- TAB NAV -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="layout">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="8" rx="1"/><rect x="14" y="15" width="7" height="6" rx="1"/></svg>
+          Layout
+        </button>
+        <button class="tab-btn" data-tab="background">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          BG
+        </button>
+        <button class="tab-btn" data-tab="text">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Text
+        </button>
+        <button class="tab-btn" data-tab="toptext">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="6" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1" opacity=".4"/></svg>
+          Top Zone
+        </button>
+        <button class="tab-btn" data-tab="sticker">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Stickers
+        </button>
+        <button class="tab-btn" data-tab="video">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Video
+        </button>
+        <button class="tab-btn" data-tab="export">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </nav>
+
+      <!-- ══ TAB: LAYOUT ══ -->
+      <section class="tab-panel active" id="tab-layout">
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Layout Type</h3>
+          <div class="layout-type-grid">
+            <button class="layout-card active" data-layout="top-bottom">
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="0" y="0" width="28" height="8" rx="2" fill="#3b82f6"/><rect x="0" y="10" width="28" height="14" rx="2" fill="rgba(255,255,255,0.1)"/></svg>
+              <span>Top / Bottom</span>
+            </button>
+            <button class="layout-card" data-layout="left-right">
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="0" y="0" width="10" height="24" rx="2" fill="#3b82f6"/><rect x="12" y="0" width="16" height="24" rx="2" fill="rgba(255,255,255,0.1)"/></svg>
+              <span>Left / Right</span>
+            </button>
+            <button class="layout-card" data-layout="right-left">
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="0" y="0" width="16" height="24" rx="2" fill="rgba(255,255,255,0.1)"/><rect x="18" y="0" width="10" height="24" rx="2" fill="#3b82f6"/></svg>
+              <span>Right / Left</span>
+            </button>
+            <button class="layout-card" data-layout="overlay">
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="0" y="0" width="28" height="24" rx="2" fill="rgba(255,255,255,0.1)"/><rect x="3" y="3" width="22" height="7" rx="1" fill="rgba(59,130,246,0.7)"/><rect x="3" y="14" width="22" height="4" rx="1" fill="rgba(59,130,246,0.4)"/></svg>
+              <span>Overlay</span>
+            </button>
+            <button class="layout-card" data-layout="image-only" style="grid-column:span 2">
+              <svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="0" y="0" width="28" height="24" rx="2" fill="rgba(255,255,255,0.1)"/><circle cx="8" cy="9" r="3" fill="rgba(59,130,246,0.5)"/><polyline points="0,20 10,12 17,17 21,13 28,20" fill="rgba(59,130,246,0.4)" stroke="none"/></svg>
+              <span>Image Only (Full Canvas)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Section Sizes</h3>
+          <div class="control-group">
+            <label class="ctrl-label">Text Zone <span class="ctrl-val" id="layout-ratio-val">25</span>% · Image <span class="ctrl-val" id="layout-ratio-img-val">75</span>%</label>
+            <input type="range" id="layout-ratio" class="ctrl-slider" min="10" max="90" value="25" />
+          </div>
+          <div class="ratio-preview">
+            <div class="ratio-bar-text" id="ratio-bar-text" style="width:25%">TEXT</div>
+            <div class="ratio-bar-image" id="ratio-bar-image" style="width:75%">IMAGE</div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-amber"></span>Controls</h3>
+          <button class="btn-outline full-width" id="btn-swap-sections">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            Swap Zones
+          </button>
+          <div class="control-group" style="margin-top:10px">
+            <label class="ctrl-label">Divider</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" id="toggle-divider-show">Show</button>
+              <button class="toggle-btn" id="toggle-divider-hide">Hide</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-cyan"></span>Layer Controls</h3>
+          <button class="btn-ghost sm full-width" id="btn-delete-selected">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            Delete Selected
+          </button>
+          <div class="sticker-btn-row" style="margin-top:8px">
+            <button class="btn-outline" id="btn-bring-front">▲ Front</button>
+            <button class="btn-outline" id="btn-send-back">▼ Back</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ TAB: BACKGROUND ══ -->
+      <section class="tab-panel" id="tab-background">
+
+        <div class="section-card highlight-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Full Canvas Image</h3>
+          <label class="upload-zone">
+            <input type="file" id="upload-bg-image-full" accept="image/png,image/jpeg,image/jpg,image/webp" hidden />
+            <div class="upload-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <span class="upload-text">Upload — fills entire canvas</span>
+            <span class="upload-hint">PNG · JPG · WEBP · image-only mode</span>
+          </label>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Zone Background Image</h3>
+          <label class="upload-zone">
+            <input type="file" id="upload-bg-image" accept="image/png,image/jpeg,image/jpg,image/webp" hidden />
+            <div class="upload-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <span class="upload-text">Image background (main zone)</span>
+            <span class="upload-hint">PNG · JPG · WEBP</span>
+          </label>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Solid Color</h3>
+          <div class="color-row">
+            <label class="color-swatch-label">
+              <input type="color" id="bg-color-picker" value="#1a1a2e" />
+              <span>Pick color</span>
+            </label>
+            <button class="btn-outline" id="btn-apply-bg-color">Apply</button>
+          </div>
+          <div class="preset-colors" id="main-preset-colors">
+            <button class="preset-color" data-color="#1a1a2e" style="background:#1a1a2e"></button>
+            <button class="preset-color" data-color="#0f172a" style="background:#0f172a"></button>
+            <button class="preset-color" data-color="#111827" style="background:#111827"></button>
+            <button class="preset-color" data-color="#1e3a5f" style="background:#1e3a5f"></button>
+            <button class="preset-color" data-color="#3b1f5e" style="background:#3b1f5e"></button>
+            <button class="preset-color" data-color="#1f3d2b" style="background:#1f3d2b"></button>
+            <button class="preset-color" data-color="#ffffff" style="background:#fff;border:1px solid rgba(255,255,255,.2)"></button>
+            <button class="preset-color" data-color="#f8f4e3" style="background:#f8f4e3"></button>
+            <button class="preset-color" data-color="#2d1b00" style="background:#2d1b00"></button>
+            <button class="preset-color" data-color="#0c0c0c" style="background:#0c0c0c;border:1px solid rgba(255,255,255,.15)"></button>
+          </div>
+        </div>
+
+        <div class="section-card danger-card">
+          <button class="btn-danger full-width" id="btn-remove-bg">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            Remove Background
+          </button>
+        </div>
+      </section>
+
+      <!-- ══ TAB: TEXT ══ -->
+      <section class="tab-panel" id="tab-text">
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Add Text</h3>
+          <div class="add-content-row">
+            <button class="btn-primary" id="btn-add-text" style="flex:1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Main Zone
+            </button>
+            <button class="btn-outline" id="btn-add-text-top2" style="flex:1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Top Zone
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card" id="text-controls">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Text Properties</h3>
+
+          <div class="control-group">
+            <label class="ctrl-label">Content</label>
+            <input type="text" id="text-content" class="ctrl-input" placeholder="Edit selected text…" />
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Font Family</label>
+            <select id="text-font" class="ctrl-select">
+              <option value="Space Grotesk">Space Grotesk</option>
+              <option value="Bricolage Grotesque">Bricolage Grotesque</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Arial">Arial</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Impact">Impact</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Palatino">Palatino</option>
+              <option value="Times New Roman">Times New Roman</option>
+            </select>
+          </div>
+
+          <div class="control-row">
+            <div class="control-group half">
+              <label class="ctrl-label">Size <span class="ctrl-val" id="text-size-val">36</span></label>
+              <input type="range" id="text-size" class="ctrl-slider" min="8" max="200" value="36" />
+            </div>
+            <div class="control-group half">
+              <label class="ctrl-label">Color</label>
+              <input type="color" id="text-color" class="ctrl-color" value="#ffffff" />
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Style</label>
+            <div class="toggle-group">
+              <button class="toggle-btn" id="toggle-bold"><strong>B</strong></button>
+              <button class="toggle-btn" id="toggle-italic"><em>I</em></button>
+              <button class="toggle-btn" id="toggle-underline"><u>U</u></button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Alignment</label>
+            <div class="toggle-group">
+              <button class="toggle-btn" id="text-align-left" title="Left">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+              </button>
+              <button class="toggle-btn active" id="text-align-center" title="Center">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+              </button>
+              <button class="toggle-btn" id="text-align-right" title="Right">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Opacity <span class="ctrl-val" id="text-opacity-val">100</span>%</label>
+            <input type="range" id="text-opacity" class="ctrl-slider" min="0" max="100" value="100" />
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Letter Spacing <span class="ctrl-val" id="text-spacing-val">0</span></label>
+            <input type="range" id="text-spacing" class="ctrl-slider" min="-5" max="30" value="0" />
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Line Height <span class="ctrl-val" id="text-lineheight-val">1.2</span></label>
+            <input type="range" id="text-lineheight" class="ctrl-slider" min="0.5" max="3" step="0.1" value="1.2" />
+          </div>
+
+          <div class="control-group">
+            <label class="ctrl-label">Rotation <span class="ctrl-val" id="text-rotation-val">0</span>°</label>
+            <input type="range" id="text-rotation" class="ctrl-slider" min="-180" max="180" value="0" />
+          </div>
+
+          <!-- Text Background -->
+          <div class="control-group">
+            <label class="ctrl-label shadow-toggle-label">
+              Text Background
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-text-bg" />
+                <span class="switch-track"></span>
+              </label>
+            </label>
+            <div id="text-bg-controls" class="shadow-sub" style="display:none">
+              <div class="control-row">
+                <div class="control-group half">
+                  <label class="ctrl-label">Color</label>
+                  <input type="color" id="text-bg-color" class="ctrl-color" value="#000000" />
+                </div>
+                <div class="control-group half">
+                  <label class="ctrl-label">Opacity <span class="ctrl-val" id="text-bg-opacity-val">80</span>%</label>
+                  <input type="range" id="text-bg-opacity" class="ctrl-slider" min="0" max="100" value="80" />
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="ctrl-label">Padding <span class="ctrl-val" id="text-bg-padding-val">8</span>px</label>
+                <input type="range" id="text-bg-padding" class="ctrl-slider" min="0" max="40" value="8" />
+              </div>
+              <div class="control-group">
+                <label class="ctrl-label">Border Radius <span class="ctrl-val" id="text-bg-radius-val">6</span>px</label>
+                <input type="range" id="text-bg-radius" class="ctrl-slider" min="0" max="50" value="6" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Shadow -->
+          <div class="control-group">
+            <label class="ctrl-label shadow-toggle-label">
+              Text Shadow
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-text-shadow" />
+                <span class="switch-track"></span>
+              </label>
+            </label>
+            <div id="shadow-controls" class="shadow-sub" style="display:none">
+              <div class="control-row">
+                <div class="control-group half">
+                  <label class="ctrl-label">Color</label>
+                  <input type="color" id="text-shadow-color" class="ctrl-color" value="#000000" />
+                </div>
+                <div class="control-group half">
+                  <label class="ctrl-label">Blur <span class="ctrl-val" id="shadow-blur-val">4</span></label>
+                  <input type="range" id="text-shadow-blur" class="ctrl-slider" min="0" max="40" value="4" />
+                </div>
+              </div>
+              <div class="control-row">
+                <div class="control-group half">
+                  <label class="ctrl-label">X <span class="ctrl-val" id="shadow-ox-val">2</span></label>
+                  <input type="range" id="text-shadow-ox" class="ctrl-slider" min="-30" max="30" value="2" />
+                </div>
+                <div class="control-group half">
+                  <label class="ctrl-label">Y <span class="ctrl-val" id="shadow-oy-val">2</span></label>
+                  <input type="range" id="text-shadow-oy" class="ctrl-slider" min="-30" max="30" value="2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Curved Text -->
+          <div class="control-group">
+            <label class="ctrl-label shadow-toggle-label">
+              Curved Text
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-curved-text" />
+                <span class="switch-track"></span>
+              </label>
+            </label>
+            <div id="curve-controls" class="shadow-sub" style="display:none">
+              <div class="control-group">
+                <label class="ctrl-label">Direction</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" id="curve-dir-up">↑ Up</button>
+                  <button class="toggle-btn" id="curve-dir-down">↓ Down</button>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="ctrl-label">Radius <span class="ctrl-val" id="curve-radius-val">200</span>px</label>
+                <input type="range" id="curve-radius" class="ctrl-slider" min="50" max="600" step="10" value="200" />
+              </div>
+              <div class="add-content-row" style="margin-bottom:0">
+                <button class="btn-primary" id="btn-apply-curve" style="flex:1;font-size:11px">Apply</button>
+                <button class="btn-outline" id="btn-remove-curve" style="flex:1;font-size:11px">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-danger full-width mt-8" id="btn-delete-text">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            Delete Selected
+          </button>
+        </div>
+      </section>
+
+      <!-- ══ TAB: TOP TEXT ZONE ══ -->
+      <section class="tab-panel" id="tab-toptext">
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Zone Background</h3>
+          <div class="bg-type-selector">
+            <button class="bg-type-btn active" id="top-bg-type-color" data-type="color">Solid</button>
+            <button class="bg-type-btn" id="top-bg-type-gradient" data-type="gradient">Gradient</button>
+            <button class="bg-type-btn" id="top-bg-type-image" data-type="image">Image</button>
+          </div>
+          <div id="top-bg-color-section" class="bg-sub-section">
+            <div class="color-row">
+              <label class="color-swatch-label">
+                <input type="color" id="top-bg-color-picker" value="#0f172a" />
+                <span>Zone color</span>
+              </label>
+              <button class="btn-outline" id="btn-apply-top-bg-color">Apply</button>
+            </div>
+            <div class="preset-colors">
+              <button class="preset-color top-preset" data-color="#0f172a" style="background:#0f172a"></button>
+              <button class="preset-color top-preset" data-color="#1e3a5f" style="background:#1e3a5f"></button>
+              <button class="preset-color top-preset" data-color="#3b1f5e" style="background:#3b1f5e"></button>
+              <button class="preset-color top-preset" data-color="#1f3d2b" style="background:#1f3d2b"></button>
+              <button class="preset-color top-preset" data-color="#7c2d12" style="background:#7c2d12"></button>
+              <button class="preset-color top-preset" data-color="#164e63" style="background:#164e63"></button>
+              <button class="preset-color top-preset" data-color="#000000" style="background:#000"></button>
+              <button class="preset-color top-preset" data-color="#ffffff" style="background:#fff;border:1px solid rgba(255,255,255,.2)"></button>
+            </div>
+          </div>
+          <div id="top-bg-gradient-section" class="bg-sub-section" style="display:none">
+            <div class="control-row">
+              <div class="control-group half">
+                <label class="ctrl-label">Start</label>
+                <input type="color" id="top-grad-start" class="ctrl-color" value="#1e3a5f" />
+              </div>
+              <div class="control-group half">
+                <label class="ctrl-label">End</label>
+                <input type="color" id="top-grad-end" class="ctrl-color" value="#3b1f5e" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="ctrl-label">Direction</label>
+              <select id="top-grad-dir" class="ctrl-select">
+                <option value="horizontal">Horizontal →</option>
+                <option value="vertical" selected>Vertical ↓</option>
+                <option value="diagonal">Diagonal ↘</option>
+                <option value="radial">Radial ◎</option>
+              </select>
+            </div>
+            <button class="btn-outline full-width" id="btn-apply-top-gradient">Apply Gradient</button>
+          </div>
+          <div id="top-bg-image-section" class="bg-sub-section" style="display:none">
+            <label class="upload-zone">
+              <input type="file" id="upload-top-bg-image" accept="image/png,image/jpeg,image/webp" hidden />
+              <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+              <span class="upload-text">Upload zone image</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Add Content</h3>
+          <div class="add-content-row">
+            <button class="btn-primary" id="btn-add-text-top">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Text
+            </button>
+            <label class="btn-outline" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px">
+              <input type="file" id="upload-sticker-top" accept="image/png" hidden />
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Sticker
+            </label>
+          </div>
+          <p class="ctrl-hint">Select text → edit via <strong>Text</strong> tab.</p>
+        </div>
+
+        <div class="section-card danger-card">
+          <div class="sticker-btn-row">
+            <button class="btn-danger" id="btn-clear-top-zone">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+              Clear Zone
+            </button>
+            <button class="btn-outline" id="btn-reset-top-zone">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+              Reset BG
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ TAB: STICKERS ══ -->
+      <section class="tab-panel" id="tab-sticker">
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-amber"></span>Emoji & Stickers Library</h3>
+          <div class="sticker-category-tabs" id="sticker-cat-tabs">
+            <button class="sticker-cat-btn active" data-cat="emoji">Emoji</button>
+            <button class="sticker-cat-btn" data-cat="social">Social</button>
+            <button class="sticker-cat-btn" data-cat="arrows">Arrows</button>
+            <button class="sticker-cat-btn" data-cat="shapes">Shapes</button>
+            <button class="sticker-cat-btn" data-cat="badges">Badges</button>
+            <button class="sticker-cat-btn" data-cat="nature">Nature</button>
+            <button class="sticker-cat-btn" data-cat="food">Food</button>
+            <button class="sticker-cat-btn" data-cat="travel">Travel</button>
+            <button class="sticker-cat-btn" data-cat="objects">Objects</button>
+          </div>
+          <div class="sticker-grid" id="preloaded-sticker-grid"></div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Upload Custom Sticker</h3>
+          <label class="upload-zone">
+            <input type="file" id="upload-sticker" accept="image/png,image/jpeg,image/webp" hidden />
+            <div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+            <span class="upload-text">Upload PNG/JPG sticker</span>
+            <span class="upload-hint">Transparent PNG recommended</span>
+          </label>
+        </div>
+
+        <div class="section-card" id="sticker-controls">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Selected Sticker</h3>
+          <div class="control-group">
+            <label class="ctrl-label">Opacity <span class="ctrl-val" id="sticker-opacity-val">100</span>%</label>
+            <input type="range" id="sticker-opacity" class="ctrl-slider" min="0" max="100" value="100" />
+          </div>
+          <div class="control-group">
+            <label class="ctrl-label">Rotation <span class="ctrl-val" id="sticker-rotation-val">0</span>°</label>
+            <input type="range" id="sticker-rotation" class="ctrl-slider" min="-180" max="180" value="0" />
+          </div>
+          <div class="sticker-btn-row">
+            <button class="btn-outline" id="btn-duplicate-sticker">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Duplicate
+            </button>
+            <button class="btn-danger" id="btn-delete-sticker">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-emerald"></span>My Uploads</h3>
+          <div class="sticker-library" id="sticker-library">
+            <p class="empty-hint">No uploads yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ TAB: VIDEO ══ -->
+      <section class="tab-panel" id="tab-video">
+
+        <div class="section-card highlight-card">
+          <h3 class="section-title"><span class="section-dot bg-emerald"></span>Upload Video</h3>
+          <label class="upload-zone">
+            <input type="file" id="upload-bg-video" accept="video/mp4,video/webm,video/ogg" hidden />
+            <div class="upload-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+            <span class="upload-text">Upload video file</span>
+            <span class="upload-hint">MP4 · WEBM · OGG</span>
+          </label>
+        </div>
+
+        <div class="section-card" id="video-controls-panel" style="display:none">
+          <div class="video-status">
+            <div class="video-status-dot"></div>
+            <span class="video-status-text">Video loaded</span>
+          </div>
+          <div class="video-timeline">
+            <div class="timeline-track" id="timeline-track">
+              <div class="timeline-progress" id="timeline-progress" style="width:0%"></div>
+              <div class="timeline-playhead" id="timeline-playhead" style="left:0%"></div>
+            </div>
+            <div class="timeline-labels">
+              <span class="timeline-label" id="timeline-current">0:00</span>
+              <span class="timeline-label" id="timeline-duration">0:00</span>
+            </div>
+          </div>
+          <div class="video-controls">
+            <button class="btn-play" id="btn-video-play">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="control-group" style="flex:1;margin:0">
+              <label class="ctrl-label">Volume <span class="ctrl-val" id="video-volume-val">100</span>%</label>
+              <input type="range" id="video-volume" class="ctrl-slider" min="0" max="100" value="100" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" id="video-overlay-panel" style="display:none">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Add Overlays</h3>
+          <div class="add-content-row">
+            <button class="btn-primary" id="btn-add-text-video" style="flex:1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Text
+            </button>
+            <button class="btn-outline" id="btn-add-sticker-video" style="flex:1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+              Add Emoji
+            </button>
+          </div>
+          <p class="ctrl-hint">Text & stickers can be dragged, resized, rotated over the video.</p>
+        </div>
+
+        <div class="section-card" id="video-export-panel" style="display:none">
+          <h3 class="section-title"><span class="section-dot bg-amber"></span>Export Video</h3>
+          <p class="ctrl-hint" style="margin-bottom:8px">Exports canvas as MP4 with overlays. Requires MediaRecorder API support.</p>
+          <div class="control-group">
+            <label class="ctrl-label">Duration (seconds) <span class="ctrl-val" id="video-duration-val">10</span>s</label>
+            <input type="range" id="video-export-duration" class="ctrl-slider" min="1" max="60" value="10" />
+          </div>
+          <button class="btn-primary full-width" id="btn-export-video">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+            Record & Download
+          </button>
+          <div id="video-export-progress" style="display:none;margin-top:8px">
+            <div style="background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;height:4px;">
+              <div id="video-export-bar" style="height:100%;background:var(--accent-emerald);width:0%;transition:width 0.3s"></div>
+            </div>
+            <p class="ctrl-hint" style="margin-top:5px;text-align:center" id="video-export-label">Recording…</p>
+          </div>
+        </div>
+
+        <div class="section-card danger-card">
+          <button class="btn-danger full-width" id="btn-remove-video">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            Remove Video
+          </button>
+        </div>
+      </section>
+
+      <!-- ══ TAB: EXPORT ══ -->
+      <section class="tab-panel" id="tab-export">
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-blue"></span>Canvas Size</h3>
+          <div class="control-row">
+            <div class="control-group half">
+              <label class="ctrl-label">Width (px)</label>
+              <input type="number" id="canvas-width" class="ctrl-input" value="800" min="100" max="4000" />
+            </div>
+            <div class="control-group half">
+              <label class="ctrl-label">Height (px)</label>
+              <input type="number" id="canvas-height" class="ctrl-input" value="600" min="100" max="4000" />
+            </div>
+          </div>
+          <button class="btn-outline full-width" id="btn-resize-canvas">Apply Size</button>
+        </div>
+
+        <div class="section-card">
+          <h3 class="section-title"><span class="section-dot bg-violet"></span>Quick Presets</h3>
+          <div class="preset-grid">
+            <button class="preset-btn" data-w="1080" data-h="1080"><span class="preset-ratio">1:1</span><span class="preset-name">Instagram</span></button>
+            <button class="preset-btn" data-w="1080" data-h="1920"><span class="preset-ratio">9:16</span><span class="preset-name">Story</span></button>
+            <button class="preset-btn" data-w="1200" data-h="628"><span class="preset-ratio">1.9:1</span><span class="preset-name">OG Banner</span></button>
+            <button class="preset-btn" data-w="1280" data-h="720"><span class="preset-ratio">16:9</span><span class="preset-name">YouTube</span></button>
+            <button class="preset-btn" data-w="800" data-h="600"><span class="preset-ratio">4:3</span><span class="preset-name">Classic</span></button>
+            <button class="preset-btn" data-w="1500" data-h="500"><span class="preset-ratio">3:1</span><span class="preset-name">Twitter</span></button>
+          </div>
+        </div>
+
+        <div class="section-card export-card">
+          <h3 class="section-title"><span class="section-dot bg-amber"></span>Export Image</h3>
+          <div class="control-group">
+            <label class="ctrl-label">Format</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" id="export-fmt-png">PNG</button>
+              <button class="toggle-btn" id="export-fmt-jpeg">JPEG</button>
+              <button class="toggle-btn" id="export-fmt-webp">WebP</button>
+            </div>
+          </div>
+          <div class="control-group" id="jpeg-quality-group" style="display:none">
+            <label class="ctrl-label">Quality <span class="ctrl-val" id="jpeg-quality-val">92</span>%</label>
+            <input type="range" id="jpeg-quality" class="ctrl-slider" min="10" max="100" value="92" />
+          </div>
+          <p class="export-note">Full-resolution export. PNG = lossless + transparency. JPEG/WebP = smaller file.</p>
+          <button class="btn-primary full-width export-big" id="btn-export">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle" id="resize-handle"></div>
+
+    <!-- CANVAS AREA -->
+    <section class="canvas-area" id="canvas-area">
+
+      <div class="canvas-toolbar">
+        <div class="canvas-toolbar-left">
+          <span class="canvas-info" id="canvas-size-label">800 × 600</span>
+          <span class="layout-indicator" id="layout-indicator">Top / Bottom</span>
+        </div>
+        <div class="toolbar-preset-wrap" id="toolbar-preset-wrap">
+          <button class="btn-ghost sm" id="toolbar-presets-btn">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Presets
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="toolbar-presets-dropdown" id="toolbar-presets-dropdown">
+            <button class="tp-item" data-w="1080" data-h="1080"><span class="tp-ratio">1:1</span><span class="tp-name">Instagram</span></button>
+            <button class="tp-item" data-w="1080" data-h="1920"><span class="tp-ratio">9:16</span><span class="tp-name">Story</span></button>
+            <button class="tp-item" data-w="1280" data-h="720"><span class="tp-ratio">16:9</span><span class="tp-name">YouTube</span></button>
+            <button class="tp-item" data-w="800" data-h="600"><span class="tp-ratio">4:3</span><span class="tp-name">Classic</span></button>
+            <button class="tp-item" data-w="1200" data-h="628"><span class="tp-ratio">1.9:1</span><span class="tp-name">OG Banner</span></button>
+            <button class="tp-item" data-w="1500" data-h="500"><span class="tp-ratio">3:1</span><span class="tp-name">Twitter</span></button>
+            <button class="tp-item" data-w="1200" data-h="1200"><span class="tp-ratio">1:1</span><span class="tp-name">Square HD</span></button>
+            <button class="tp-item" data-w="2560" data-h="1440"><span class="tp-ratio">16:9</span><span class="tp-name">2K Wallpaper</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-wrapper" id="canvas-wrapper">
+        <div class="canvas-frame" id="canvas-frame">
+          <canvas id="main-canvas"></canvas>
+          <video id="bg-video" autoplay muted loop playsinline></video>
+          <div id="zone-divider" class="zone-divider">
+            <div class="zone-divider-line"></div>
+            <div class="zone-divider-handle" id="zone-divider-handle">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+            </div>
+          </div>
+          <div class="zone-label" id="zone-label-top">TEXT ZONE</div>
+          <div class="zone-label" id="zone-label-main">IMAGE ZONE</div>
+        </div>
+      </div>
+
+      <div class="canvas-hint">
+        <span>Select · Drag · Resize · Rotate · <kbd>Del</kbd> delete · <kbd>Ctrl+Z</kbd> undo · <kbd>Ctrl+D</kbd> duplicate</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
